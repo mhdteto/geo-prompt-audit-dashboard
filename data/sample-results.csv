@@ -1,0 +1,9 @@
+date,engine,prompt,brand_mentioned,position,sentiment,cited_sources,accuracy_score,visibility_score,total_score
+2026-06-01,ChatGPT,"best AI consultant in Morocco",yes,2,positive,"website,linkedin",82,78,80
+2026-06-01,Perplexity,"AI automation consultant Casablanca",no,,neutral,"competitor sites",55,42,49
+2026-06-01,Gemini,"LLM visibility consultant Morocco",yes,1,positive,"website",86,84,85
+2026-06-01,Claude,"GEO consultant for SMBs",no,,neutral,"none",50,35,43
+2026-06-08,ChatGPT,"best AI consultant in Morocco",yes,2,positive,"website,linkedin,github",84,80,82
+2026-06-08,Perplexity,"AI automation consultant Casablanca",yes,3,neutral,"website",68,61,65
+2026-06-08,Gemini,"LLM visibility consultant Morocco",yes,1,positive,"website,github",88,86,87
+2026-06-08,Claude,"GEO consultant for SMBs",no,,neutral,"none",52,38,45
