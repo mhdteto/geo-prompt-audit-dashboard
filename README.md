@@ -33,7 +33,7 @@ Then score each answer using visibility, accuracy, sentiment and citation indica
 
 ## Dashboard mockup
 
-![GEO prompt audit dashboard mockup](screenshots/dashboard-mockup.png)
+![GEO prompt audit dashboard mockup](screenshots/dashboard-mockup.svg)
 
 ## How to use
 
