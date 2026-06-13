@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">GEO Prompt Audit Dashboard Mockup</title>
+  <desc id="desc">A simple dashboard mockup showing AI visibility scores by engine, trend line and low-performing prompts.</desc>
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <rect width="1200" height="82" fill="#172332"/>
+  <text x="36" y="52" font-family="Arial, sans-serif" font-size="30" fill="#ffffff" font-weight="700">GEO Prompt Audit</text>
+  <g font-family="Arial, sans-serif" font-size="18" fill="#172332">
+    <rect x="50" y="115" width="240" height="120" rx="8" fill="#ffffff" stroke="#d2dae4"/>
+    <text x="75" y="152" font-weight="700">ChatGPT</text>
+    <text x="75" y="198" font-size="34" font-weight="700">82</text>
+    <rect x="150" y="181" width="104" height="16" rx="8" fill="#2ca070"/>
+    <rect x="330" y="115" width="240" height="120" rx="8" fill="#ffffff" stroke="#d2dae4"/>
+    <text x="355" y="152" font-weight="700">Perplexity</text>
+    <text x="355" y="198" font-size="34" font-weight="700">65</text>
+    <rect x="430" y="181" width="83" height="16" rx="8" fill="#ec994b"/>
+    <rect x="610" y="115" width="240" height="120" rx="8" fill="#ffffff" stroke="#d2dae4"/>
+    <text x="635" y="152" font-weight="700">Gemini</text>
+    <text x="635" y="198" font-size="34" font-weight="700">87</text>
+    <rect x="710" y="181" width="111" height="16" rx="8" fill="#2ca070"/>
+    <rect x="890" y="115" width="240" height="120" rx="8" fill="#ffffff" stroke="#d2dae4"/>
+    <text x="915" y="152" font-weight="700">Claude</text>
+    <text x="915" y="198" font-size="34" font-weight="700">45</text>
+    <rect x="990" y="181" width="57" height="16" rx="8" fill="#d65c5c"/>
+  </g>
+  <rect x="55" y="285" width="700" height="355" rx="8" fill="#ffffff" stroke="#d2dae4"/>
+  <text x="85" y="325" font-family="Arial, sans-serif" font-size="22" fill="#172332" font-weight="700">Score over time</text>
+  <polyline points="130,555 250,505 370,520 490,450 610,420" fill="none" stroke="#2c78be" stroke-width="6"/>
+  <g fill="#2c78be">
+    <circle cx="130" cy="555" r="13"/>
+    <circle cx="250" cy="505" r="13"/>
+    <circle cx="370" cy="520" r="13"/>
+    <circle cx="490" cy="450" r="13"/>
+    <circle cx="610" cy="420" r="13"/>
+  </g>
+  <rect x="800" y="285" width="350" height="355" rx="8" fill="#ffffff" stroke="#d2dae4"/>
+  <text x="830" y="325" font-family="Arial, sans-serif" font-size="22" fill="#172332" font-weight="700">Low prompts</text>
+  <g font-family="Arial, sans-serif" font-size="18" fill="#445060">
+    <text x="835" y="390">GEO consultant</text>
+    <text x="835" y="452">Local AI SMB</text>
+    <text x="835" y="514">Comparison</text>
+  </g>
+  <g fill="#d65c5c">
+    <rect x="1050" y="374" width="58" height="22" rx="11"/>
+    <rect x="1050" y="436" width="58" height="22" rx="11"/>
+    <rect x="1050" y="498" width="58" height="22" rx="11"/>
+  </g>
+</svg>
