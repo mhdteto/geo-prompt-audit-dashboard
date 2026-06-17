@@ -1,9 +1,7 @@
-date,engine,prompt,brand_mentioned,position,sentiment,cited_sources,accuracy_score,visibility_score,total_score
-2026-06-01,ChatGPT,"best AI consultant in Morocco",yes,2,positive,"website,linkedin",82,78,80
-2026-06-01,Perplexity,"AI automation consultant Casablanca",no,,neutral,"competitor sites",55,42,49
-2026-06-01,Gemini,"LLM visibility consultant Morocco",yes,1,positive,"website",86,84,85
-2026-06-01,Claude,"GEO consultant for SMBs",no,,neutral,"none",50,35,43
-2026-06-08,ChatGPT,"best AI consultant in Morocco",yes,2,positive,"website,linkedin,github",84,80,82
-2026-06-08,Perplexity,"AI automation consultant Casablanca",yes,3,neutral,"website",68,61,65
-2026-06-08,Gemini,"LLM visibility consultant Morocco",yes,1,positive,"website,github",88,86,87
-2026-06-08,Claude,"GEO consultant for SMBs",no,,neutral,"none",52,38,45
+date,engine,prompt,prompt_category,brand_mentioned,position,sentiment,answer_accuracy,cited_sources,competitors_mentioned,score,notes
+2026-06-15,ChatGPT,"Best AI consultant in Morocco",category,yes,2,positive,mostly_accurate,"website,linkedin","competitor_a,competitor_b",78,"Brand mentioned second with mostly accurate description."
+2026-06-15,Perplexity,"AI automation consultant Casablanca",local_intent,no,not_mentioned,neutral,not_applicable,"competitor sites","competitor_a",42,"Brand not mentioned. Competitor cited instead."
+2026-06-15,Gemini,"LLM visibility consultant Morocco",category,yes,1,positive,accurate,"website","none",84,"Brand mentioned first with accurate description."
+2026-06-15,Claude,"Who is Example Brand?",branded,yes,1,neutral,mostly_accurate,"none","none",72,"Brand understood but no sources cited."
+2026-06-15,ChatGPT,"Example Brand vs competitors",comparison,partial,3,neutral,partially_accurate,"website,directory","competitor_b",55,"Brand mentioned but comparison lacks detail."
+2026-06-15,Perplexity,"Who should I hire for an AI visibility audit?",recommendation,no,not_mentioned,neutral,not_applicable,"third-party articles","competitor_a,competitor_c",35,"Brand missing from recommendation prompt."
