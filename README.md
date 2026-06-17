@@ -16,6 +16,23 @@ This project provides a simple structure for monitoring prompt results over time
 - Dashboard logic
 - Minimal analysis notebook
 - Dashboard mockup
+- Prompt audit dataset
+- Scoring methodology
+- Data schema
+- Metrics dictionary
+- Dashboard interpretation guide
+- Roadmap
+- Changelog
+
+## Documentation
+
+- [How to run a GEO prompt audit](docs/how-to-run-a-geo-prompt-audit.md)
+- [Metrics dictionary](docs/metrics-dictionary.md)
+- [Scoring methodology](docs/scoring-methodology.md)
+- [Data schema](docs/data-schema.md)
+- [Dashboard interpretation guide](docs/dashboard-interpretation-guide.md)
+- [Roadmap](ROADMAP.md)
+- [Changelog](CHANGELOG.md)
 
 ## Use case
 
@@ -46,6 +63,12 @@ Then score each answer using visibility, accuracy, sentiment and citation indica
 ## Business value
 
 This dashboard converts AI visibility into a tracking workflow. It helps teams see whether content updates, source improvements and reputation work are improving brand presence in AI answers.
+
+## Disclaimer
+
+This project does not guarantee rankings, citations, mentions or recommendations in AI-generated answers.
+
+It provides a practical structure to track AI visibility directionally using prompt-level testing, structured data and consistent scoring.
 
 ## Author
 
