@@ -23,6 +23,7 @@ from src.generator import (
     MAX_PROMPT_CHARS,
     detect_provider,
     generate_response,
+    provider_error_diagnostic,
     public_error_message,
 )
 from src.report import build_html_report
@@ -141,9 +142,8 @@ def render_simple_generator() -> None:
             st.error(str(exc))
         except Exception as exc:
             LOGGER.warning(
-                "AI generation failed: type=%s status=%s",
-                exc.__class__.__name__,
-                getattr(exc, "status_code", None) or getattr(exc, "code", None),
+                "AI generation failed: %s",
+                provider_error_diagnostic(exc),
             )
             st.error(public_error_message(exc))
         else:
