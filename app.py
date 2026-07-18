@@ -142,6 +142,8 @@ def render_simple_generator() -> None:
     )
     provider = detect_provider(model, configured_provider)
     if provider == GEMINI_PROVIDER:
+        if model == "gemini-2.5-flash":
+            model = "gemini-3.5-flash"
         api_key = (
             runtime_setting("GEMINI_API_KEY")
             or runtime_setting("AI_API_KEY")
@@ -159,7 +161,7 @@ def render_simple_generator() -> None:
         with st.expander("Configuration administrateur"):
             st.code(
                 'AI_PROVIDER = "gemini"\n'
-                'AI_MODEL = "gemini-2.5-flash"\n'
+                'AI_MODEL = "gemini-3.5-flash"\n'
                 'GEMINI_API_KEY = "votre-cle-api"',
                 language="toml",
             )

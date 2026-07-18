@@ -11,6 +11,7 @@ from src.generator import (
     normalize_prompt,
     provider_error_diagnostic,
     public_error_message,
+    resolve_gemini_model,
 )
 
 
@@ -85,6 +86,8 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(detect_provider("custom", "gemini"), GEMINI_PROVIDER)
         with self.assertRaises(ValueError):
             detect_provider("custom", "unknown")
+        self.assertEqual(resolve_gemini_model("gemini-2.5-flash"), "gemini-3.5-flash")
+        self.assertEqual(resolve_gemini_model("gemini-custom"), "gemini-custom")
 
     def test_gemini_call_is_bounded_and_uses_system_instructions(self):
         client = FakeGeminiHTTPClient()
@@ -99,7 +102,7 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(
             client.url,
             "https://generativelanguage.googleapis.com/v1beta/models/"
-            "gemini-2.5-flash:generateContent",
+            "gemini-3.5-flash:generateContent",
         )
         arguments = client.arguments
         self.assertEqual(arguments["headers"]["x-goog-api-key"], "test-key")

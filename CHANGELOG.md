@@ -8,6 +8,7 @@ Released: 2026-07-18
 
 - Replace the experimental Gemini Interactions client with the stable Generate Content REST API.
 - Keep Gemini requests stateless with bounded prompt and output sizes.
+- Automatically migrate the unavailable `gemini-2.5-flash` ID to stable `gemini-3.5-flash`.
 
 ### Added
 
