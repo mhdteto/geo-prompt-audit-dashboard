@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -14,6 +15,12 @@ from src.analytics import (
     engine_summary,
     headline_metrics,
     trend_summary,
+)
+from src.generator import (
+    DEFAULT_MODEL,
+    MAX_PROMPT_CHARS,
+    generate_response,
+    public_error_message,
 )
 from src.report import build_html_report
 from src.scoring import ensure_scores, score_label
@@ -53,10 +60,95 @@ def format_optional_percent(value: float | None) -> str:
     return "N/A" if value is None else f"{value:.1f}%"
 
 
+def runtime_setting(name: str) -> str | None:
+    """Read a server-side setting without exposing it in the interface."""
+    environment_value = os.getenv(name)
+    if environment_value:
+        return environment_value
+    try:
+        secret_value = st.secrets.get(name)
+    except Exception:
+        return None
+    return str(secret_value) if secret_value else None
+
+
+def render_simple_generator() -> None:
+    st.subheader("Assistant IA — mode simple")
+    st.write(
+        "Écrivez votre demande en langage naturel. L’assistant répond directement "
+        "dans la même langue, avec un résultat clair et exploitable."
+    )
+
+    api_key = runtime_setting("OPENAI_API_KEY")
+    model = runtime_setting("OPENAI_MODEL") or DEFAULT_MODEL
+    generation_ready = bool(api_key)
+
+    if not generation_ready:
+        st.warning(
+            "La génération publique n’est pas encore activée. "
+            "L’administrateur doit configurer le secret OPENAI_API_KEY."
+        )
+        with st.expander("Configuration administrateur"):
+            st.code('OPENAI_API_KEY = "votre-cle-api"\nOPENAI_MODEL = "gpt-5.6-luna"', language="toml")
+
+    with st.form("simple-generator-form"):
+        prompt = st.text_area(
+            "Votre demande",
+            placeholder="Exemple : Prépare un plan marketing simple pour une PME marocaine.",
+            height=180,
+            max_chars=MAX_PROMPT_CHARS,
+        )
+        submitted = st.form_submit_button(
+            "Générer le résultat",
+            type="primary",
+            width="stretch",
+            disabled=not generation_ready,
+        )
+
+    if submitted:
+        try:
+            with st.spinner("Génération en cours…"):
+                answer = generate_response(prompt, api_key or "", model=model)
+        except ValueError as exc:
+            st.error(str(exc))
+        except Exception as exc:
+            st.error(public_error_message(exc))
+        else:
+            st.session_state["simple_generator_answer"] = answer
+
+    answer = st.session_state.get("simple_generator_answer")
+    if answer:
+        st.success("Résultat généré")
+        with st.container(border=True):
+            st.markdown(answer)
+        st.download_button(
+            "Télécharger le résultat",
+            data=answer.encode("utf-8"),
+            file_name="resultat-ia.md",
+            mime="text/markdown",
+            width="stretch",
+        )
+
+    st.caption(
+        f"Modèle configuré : {model}. Vérifiez les informations importantes avant de les utiliser."
+    )
+
+
 st.title("GEO Prompt Audit Dashboard")
 st.caption(
     "Measure brand mentions, answer accuracy, citations and competitive visibility across AI answer engines."
 )
+
+mode = st.radio(
+    "Choisir un mode",
+    ["Génération simple", "Audit GEO"],
+    horizontal=True,
+    label_visibility="collapsed",
+)
+
+if mode == "Génération simple":
+    render_simple_generator()
+    st.stop()
 
 with st.sidebar:
     st.header("Audit data")
