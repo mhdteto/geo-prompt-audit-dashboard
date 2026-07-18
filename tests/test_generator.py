@@ -143,6 +143,18 @@ class GeneratorTests(unittest.TestCase):
         self.assertIn("reason=API_KEY_INVALID", diagnostic)
         self.assertNotIn("secret-value", diagnostic)
 
+        MessageOnlyError = type(
+            "BadRequestError",
+            (Exception,),
+            {
+                "status_code": 400,
+                "message": "The store parameter is not supported: secret-value",
+            },
+        )
+        message_diagnostic = provider_error_diagnostic(MessageOnlyError())
+        self.assertIn("category=storage", message_diagnostic)
+        self.assertNotIn("secret-value", message_diagnostic)
+
 
 if __name__ == "__main__":
     unittest.main()
