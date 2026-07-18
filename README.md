@@ -61,7 +61,7 @@ The application validates required columns, dates, categorical values, score ran
 3. Select **Générer le résultat**.
 4. Read the answer or download it as Markdown.
 
-The server supports Google Gemini and OpenAI. Configure `AI_PROVIDER`, `AI_MODEL` and the matching `GEMINI_API_KEY` or `OPENAI_API_KEY` in an environment variable or Streamlit secrets. The key is never displayed in the interface and must never be committed to GitHub.
+The server supports Google Gemini through the Interactions API and OpenAI through the Responses API. Configure `AI_PROVIDER`, `AI_MODEL` and the matching `GEMINI_API_KEY` or `OPENAI_API_KEY` in an environment variable or Streamlit secrets. The key is never displayed in the interface and must never be committed to GitHub.
 
 For backward compatibility, a model named `gemini-*` in `OPENAI_MODEL` is routed automatically to Gemini and can reuse the existing server-side key setting. New deployments should use the neutral settings shown in `.streamlit/secrets.toml.example`.
 

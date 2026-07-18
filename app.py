@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 from pathlib import Path
 
@@ -32,6 +33,7 @@ from src.validation import validate_and_normalize
 ROOT = Path(__file__).resolve().parent
 SAMPLE_DATA = ROOT / "data" / "sample-results.csv"
 TEMPLATE_DATA = ROOT / "data" / "data-template.csv"
+LOGGER = logging.getLogger(__name__)
 
 st.set_page_config(
     page_title="GEO Prompt Audit Dashboard",
@@ -138,6 +140,11 @@ def render_simple_generator() -> None:
         except ValueError as exc:
             st.error(str(exc))
         except Exception as exc:
+            LOGGER.warning(
+                "AI generation failed: type=%s status=%s",
+                exc.__class__.__name__,
+                getattr(exc, "status_code", None) or getattr(exc, "code", None),
+            )
             st.error(public_error_message(exc))
         else:
             st.session_state["simple_generator_answer"] = answer

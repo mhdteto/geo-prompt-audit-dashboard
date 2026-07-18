@@ -59,17 +59,14 @@ def generate_response(
 
             client = genai.Client(api_key=api_key)
 
-        from google.genai import types
-
-        response = client.models.generate_content(
+        response = client.interactions.create(
             model=model,
-            contents=normalized_prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_INSTRUCTIONS,
-                max_output_tokens=MAX_OUTPUT_TOKENS,
-            ),
+            input=normalized_prompt,
+            system_instruction=SYSTEM_INSTRUCTIONS,
+            generation_config={"max_output_tokens": MAX_OUTPUT_TOKENS},
+            store=False,
         )
-        output_text = str(getattr(response, "text", "") or "").strip()
+        output_text = str(getattr(response, "output_text", "") or "").strip()
     else:
         if client is None:
             from openai import OpenAI
@@ -94,7 +91,11 @@ def public_error_message(error: Exception) -> str:
     """Map provider failures to safe, useful messages without leaking secrets."""
     error_name = error.__class__.__name__.lower()
     status_code = getattr(error, "status_code", None) or getattr(error, "code", None)
-    if "authentication" in error_name or "permission" in error_name or status_code in {401, 403}:
+    if (
+        "authentication" in error_name
+        or "permission" in error_name
+        or status_code in {400, 401, 403, 404}
+    ):
         return "La configuration du service IA doit être vérifiée par l’administrateur."
     if "ratelimit" in error_name or status_code == 429:
         return "Le service reçoit trop de demandes. Réessayez dans quelques instants."
