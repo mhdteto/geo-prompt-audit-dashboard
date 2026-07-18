@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.2.1 - Gemini provider support
+
+Released: 2026-07-18
+
+### Fixed
+
+- Route `gemini-*` models to the Google Gemini API instead of the OpenAI API.
+- Support neutral provider settings while keeping the initial Streamlit configuration compatible.
+- Use provider-neutral public errors without exposing API details.
+
+### Changed
+
+- Document the live Streamlit application and both supported AI providers.
+
 ## v1.2.0 - Simple AI generation
 
 Released: 2026-07-18

@@ -18,7 +18,9 @@ from src.analytics import (
 )
 from src.generator import (
     DEFAULT_MODEL,
+    GEMINI_PROVIDER,
     MAX_PROMPT_CHARS,
+    detect_provider,
     generate_response,
     public_error_message,
 )
@@ -79,17 +81,36 @@ def render_simple_generator() -> None:
         "dans la même langue, avec un résultat clair et exploitable."
     )
 
-    api_key = runtime_setting("OPENAI_API_KEY")
-    model = runtime_setting("OPENAI_MODEL") or DEFAULT_MODEL
+    configured_provider = runtime_setting("AI_PROVIDER")
+    model = (
+        runtime_setting("AI_MODEL")
+        or runtime_setting("GEMINI_MODEL")
+        or runtime_setting("OPENAI_MODEL")
+        or DEFAULT_MODEL
+    )
+    provider = detect_provider(model, configured_provider)
+    if provider == GEMINI_PROVIDER:
+        api_key = (
+            runtime_setting("GEMINI_API_KEY")
+            or runtime_setting("AI_API_KEY")
+            or runtime_setting("OPENAI_API_KEY")
+        )
+    else:
+        api_key = runtime_setting("OPENAI_API_KEY") or runtime_setting("AI_API_KEY")
     generation_ready = bool(api_key)
 
     if not generation_ready:
         st.warning(
             "La génération publique n’est pas encore activée. "
-            "L’administrateur doit configurer le secret OPENAI_API_KEY."
+            "L’administrateur doit configurer la clé du service IA."
         )
         with st.expander("Configuration administrateur"):
-            st.code('OPENAI_API_KEY = "votre-cle-api"\nOPENAI_MODEL = "gpt-5.6-luna"', language="toml")
+            st.code(
+                'AI_PROVIDER = "gemini"\n'
+                'AI_MODEL = "gemini-2.5-flash"\n'
+                'GEMINI_API_KEY = "votre-cle-api"',
+                language="toml",
+            )
 
     with st.form("simple-generator-form"):
         prompt = st.text_area(
@@ -108,7 +129,12 @@ def render_simple_generator() -> None:
     if submitted:
         try:
             with st.spinner("Génération en cours…"):
-                answer = generate_response(prompt, api_key or "", model=model)
+                answer = generate_response(
+                    prompt,
+                    api_key or "",
+                    model=model,
+                    provider=provider,
+                )
         except ValueError as exc:
             st.error(str(exc))
         except Exception as exc:

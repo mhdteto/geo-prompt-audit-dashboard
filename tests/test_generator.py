@@ -1,9 +1,12 @@
 import unittest
 
 from src.generator import (
+    GEMINI_PROVIDER,
     MAX_OUTPUT_TOKENS,
     MAX_PROMPT_CHARS,
+    OPENAI_PROVIDER,
     SYSTEM_INSTRUCTIONS,
+    detect_provider,
     generate_response,
     normalize_prompt,
     public_error_message,
@@ -28,6 +31,24 @@ class FakeClient:
         self.responses = FakeResponses()
 
 
+class FakeGeminiResponse:
+    text = "Une réponse Gemini utile."
+
+
+class FakeModels:
+    def __init__(self):
+        self.arguments = None
+
+    def generate_content(self, **kwargs):
+        self.arguments = kwargs
+        return FakeGeminiResponse()
+
+
+class FakeGeminiClient:
+    def __init__(self):
+        self.models = FakeModels()
+
+
 class GeneratorTests(unittest.TestCase):
     def test_prompt_is_trimmed(self):
         self.assertEqual(normalize_prompt("  Bonjour  "), "Bonjour")
@@ -49,6 +70,29 @@ class GeneratorTests(unittest.TestCase):
         self.assertEqual(client.responses.arguments["max_output_tokens"], MAX_OUTPUT_TOKENS)
         self.assertFalse(client.responses.arguments["store"])
 
+    def test_provider_is_inferred_from_model_or_explicit_setting(self):
+        self.assertEqual(detect_provider("gemini-2.5-flash"), GEMINI_PROVIDER)
+        self.assertEqual(detect_provider("gpt-5.6-luna"), OPENAI_PROVIDER)
+        self.assertEqual(detect_provider("custom", "gemini"), GEMINI_PROVIDER)
+        with self.assertRaises(ValueError):
+            detect_provider("custom", "unknown")
+
+    def test_gemini_call_is_bounded_and_uses_system_instructions(self):
+        client = FakeGeminiClient()
+        result = generate_response(
+            " Aide-moi ",
+            "test-key",
+            model="gemini-2.5-flash",
+            client=client,
+        )
+
+        self.assertEqual(result, "Une réponse Gemini utile.")
+        self.assertEqual(client.models.arguments["model"], "gemini-2.5-flash")
+        self.assertEqual(client.models.arguments["contents"], "Aide-moi")
+        config = client.models.arguments["config"]
+        self.assertEqual(config.system_instruction, SYSTEM_INSTRUCTIONS)
+        self.assertEqual(config.max_output_tokens, MAX_OUTPUT_TOKENS)
+
     def test_missing_key_and_empty_output_are_rejected(self):
         with self.assertRaises(ValueError):
             generate_response("Bonjour", "", client=FakeClient())
@@ -63,6 +107,13 @@ class GeneratorTests(unittest.TestCase):
         RateLimitError = type("RateLimitError", (Exception,), {})
         self.assertIn("administrateur", public_error_message(AuthenticationError()))
         self.assertIn("trop de demandes", public_error_message(RateLimitError()))
+
+        GooglePermissionError = type(
+            "ClientError",
+            (Exception,),
+            {"status_code": 403},
+        )
+        self.assertIn("administrateur", public_error_message(GooglePermissionError()))
 
 
 if __name__ == "__main__":

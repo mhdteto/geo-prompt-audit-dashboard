@@ -6,6 +6,8 @@ An interactive, open-source dashboard for measuring how a brand appears across C
 [![MIT License](https://img.shields.io/badge/license-MIT-0b7285.svg)](LICENSE)
 [![Streamlit](https://img.shields.io/badge/built%20with-Streamlit-ff4b4b.svg)](https://streamlit.io/)
 
+**[Open the live application](https://geo-prompt-audit-dashboard-gl8ahrmbneyhcbpleasac4.streamlit.app/)**
+
 > Upload a prompt-audit CSV, compare AI engines, identify visibility gaps and export a client-ready HTML report.
 
 The application also includes a **Simple generation** mode: a visitor writes a request and receives a direct AI-generated answer in the same language.
@@ -32,7 +34,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 cp .streamlit/secrets.toml.example .streamlit/secrets.toml
-# Replace the placeholder with your real OpenAI API key.
+# Replace the placeholder with your real provider API key.
 streamlit run app.py
 ```
 
@@ -59,7 +61,9 @@ The application validates required columns, dates, categorical values, score ran
 3. Select **Générer le résultat**.
 4. Read the answer or download it as Markdown.
 
-The server reads `OPENAI_API_KEY` from an environment variable or Streamlit secrets. The key is never displayed in the interface and must never be committed to GitHub. `OPENAI_MODEL` is optional and defaults to `gpt-5.6-luna`.
+The server supports Google Gemini and OpenAI. Configure `AI_PROVIDER`, `AI_MODEL` and the matching `GEMINI_API_KEY` or `OPENAI_API_KEY` in an environment variable or Streamlit secrets. The key is never displayed in the interface and must never be committed to GitHub.
+
+For backward compatibility, a model named `gemini-*` in `OPENAI_MODEL` is routed automatically to Gemini and can reuse the existing server-side key setting. New deployments should use the neutral settings shown in `.streamlit/secrets.toml.example`.
 
 ## CSV schema
 
@@ -116,7 +120,7 @@ GitHub Actions runs the suite on Python 3.10 and 3.12 for every pull request and
 1. Fork or use this repository in your GitHub account.
 2. In Streamlit Community Cloud, create an app from the repository.
 3. Select `app.py` as the entry point.
-4. Open **App settings → Secrets** and add the values from `.streamlit/secrets.toml.example` with your real OpenAI API key.
+4. Open **App settings → Secrets** and add the values from `.streamlit/secrets.toml.example` with your real provider API key.
 5. Deploy the application. The audit dashboard remains available without an API call; simple generation requires the configured secret.
 
 ## Methodology and limitations
