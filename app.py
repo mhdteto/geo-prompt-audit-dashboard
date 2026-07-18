@@ -82,7 +82,10 @@ def runtime_provider_diagnostic(error: Exception) -> str:
     body = getattr(error, "body", None)
     payload = body.get("error", body) if isinstance(body, dict) else {}
     remote_status = payload.get("status") if isinstance(payload, dict) else None
-    message = str(payload.get("message", "") if isinstance(payload, dict) else "").lower()
+    provider_message = payload.get("message", "") if isinstance(payload, dict) else ""
+    if not provider_message:
+        provider_message = getattr(error, "message", "")
+    message = str(provider_message).lower()
 
     reason = None
     details = payload.get("details", []) if isinstance(payload, dict) else []
