@@ -9,6 +9,9 @@ from urllib.parse import quote
 DEFAULT_MODEL = "gpt-5.6-luna"
 OPENAI_PROVIDER = "openai"
 GEMINI_PROVIDER = "gemini"
+GEMINI_MODEL_ALIASES = {
+    "gemini-2.5-flash": "gemini-3.5-flash",
+}
 MAX_PROMPT_CHARS = 6_000
 MAX_OUTPUT_TOKENS = 1_200
 SYSTEM_INSTRUCTIONS = (
@@ -49,6 +52,12 @@ def detect_provider(model: str, provider: str | None = None) -> str:
     return OPENAI_PROVIDER
 
 
+def resolve_gemini_model(model: str) -> str:
+    """Map retired Gemini model IDs to their current stable replacements."""
+    normalized_model = model.strip()
+    return GEMINI_MODEL_ALIASES.get(normalized_model, normalized_model)
+
+
 def generate_response(
     prompt: str,
     api_key: str,
@@ -64,6 +73,7 @@ def generate_response(
 
     resolved_provider = detect_provider(model, provider)
     if resolved_provider == GEMINI_PROVIDER:
+        model = resolve_gemini_model(model)
         owns_client = client is None
         if client is None:
             import httpx
