@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.0 - Simple AI generation
+
+Released: 2026-07-18
+
+### Added
+
+- Public simple mode with one request field and a direct AI-generated result.
+- Server-side OpenAI Responses API integration with bounded input and output.
+- Safe provider-error messages and downloadable Markdown results.
+- Streamlit secrets example and deployment instructions.
+- Unit tests for prompt validation and API request construction.
+
 ## v1.1.0 - Interactive Dashboard
 
 Released: 2026-07-18

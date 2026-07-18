@@ -8,6 +8,8 @@ An interactive, open-source dashboard for measuring how a brand appears across C
 
 > Upload a prompt-audit CSV, compare AI engines, identify visibility gaps and export a client-ready HTML report.
 
+The application also includes a **Simple generation** mode: a visitor writes a request and receives a direct AI-generated answer in the same language.
+
 ## What the application measures
 
 - Visibility score on a transparent 100-point model
@@ -29,6 +31,8 @@ cd geo-prompt-audit-dashboard
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+# Replace the placeholder with your real OpenAI API key.
 streamlit run app.py
 ```
 
@@ -47,6 +51,15 @@ On Windows PowerShell, activate the environment with:
 5. Filter the results and export a CSV or standalone HTML report.
 
 The application validates required columns, dates, categorical values, score ranges and likely duplicate rows before calculating any metric.
+
+## Use simple generation mode
+
+1. Open the application and select **Génération simple**.
+2. Enter a request in natural language.
+3. Select **Générer le résultat**.
+4. Read the answer or download it as Markdown.
+
+The server reads `OPENAI_API_KEY` from an environment variable or Streamlit secrets. The key is never displayed in the interface and must never be committed to GitHub. `OPENAI_MODEL` is optional and defaults to `gpt-5.6-luna`.
 
 ## CSV schema
 
@@ -103,7 +116,8 @@ GitHub Actions runs the suite on Python 3.10 and 3.12 for every pull request and
 1. Fork or use this repository in your GitHub account.
 2. In Streamlit Community Cloud, create an app from the repository.
 3. Select `app.py` as the entry point.
-4. Deploy without adding secrets; the demo requires none.
+4. Open **App settings → Secrets** and add the values from `.streamlit/secrets.toml.example` with your real OpenAI API key.
+5. Deploy the application. The audit dashboard remains available without an API call; simple generation requires the configured secret.
 
 ## Methodology and limitations
 
