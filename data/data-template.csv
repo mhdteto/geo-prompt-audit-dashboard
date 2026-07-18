@@ -1,0 +1,2 @@
+date,engine,prompt,prompt_category,brand,brand_mentioned,position,sentiment,answer_accuracy,cited_sources,competitors_mentioned,recommended,score,notes
+2026-07-18,ChatGPT,"Best provider for [category] in [location]",category,Your Brand,yes,2,positive,mostly_accurate,"official website,third-party article","Competitor A,Competitor B",yes,,"Replace this example with one observed answer."

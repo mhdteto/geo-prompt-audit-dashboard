@@ -2,7 +2,7 @@
 
 ## Current version
 
-v1.0 - Initial public version of the GEO Prompt Audit Dashboard.
+v1.1.0 - Interactive Streamlit version of the GEO Prompt Audit Dashboard.
 
 ## Purpose
 
@@ -14,40 +14,38 @@ The goal is to help consultants, SMBs and B2B teams measure AI visibility using 
 
 The current version includes:
 
-- Sample prompt audit dataset.
-- Prompt tracking structure.
-- Scoring model.
-- Dashboard logic.
-- Example notebook.
-- Documentation for running a prompt audit.
-- Documentation for interpreting results.
+- CSV upload, validation and normalization.
+- Interactive filters for brands, engines, categories and dates.
+- Visibility, mention, citation, recommendation and position metrics.
+- Trend, engine, category and competitor visualizations.
+- Filtered CSV and standalone HTML report exports.
+- Transparent scoring model and a fictional multi-date demo dataset.
+- Automated unit tests for Python 3.10 and 3.12.
 
 ## Next improvements
 
-### v1.1
-
-- Add more sample prompts by category.
-- Add a Moroccan SMB example dataset.
-- Add a French version of the documentation.
-- Add more dashboard screenshots.
-- Add a Google Sheets version.
-- Add additional scoring examples.
-
 ### v1.2
 
-- Add competitor tracking fields.
+- Add a French interface and documentation.
+- Add a Google Sheets import workflow.
+- Add audit-to-audit comparison and volatility metrics.
+- Add PDF report generation with brand customization.
+- Add additional scoring examples and benchmark datasets by sector.
+- Add dashboard screenshots and a short walkthrough video.
+
+### v1.3
+
 - Add prompt volatility notes.
 - Add source citation analysis.
 - Add weekly tracking template.
-- Add CSV validation rules.
-- Add benchmark examples by sector.
+- Add optional API-backed prompt collection with explicit cost controls.
+- Add scheduled monitoring and change alerts.
 
 ### Future ideas
 
-- Streamlit dashboard.
 - Looker Studio template.
 - Google Sheets dashboard.
 - Notion audit dashboard.
 - Prompt monitoring workflow.
 - AI visibility trend report.
-- Competitor comparison module.
+- Multi-client workspace and access controls.

@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.1.0 - Interactive Dashboard
+
+Released: 2026-07-18
+
+### Added
+
+- Interactive Streamlit application with CSV upload and filters.
+- Visibility, mention, citation, recommendation, accuracy and position KPIs.
+- AI-engine, prompt-category, trend and competitor views.
+- Standalone HTML and filtered CSV exports.
+- CSV validation, normalization and transparent automatic scoring.
+- Backward compatibility with the v1.0 data structure.
+- Fictional multi-date Moroccan demo dataset and reusable CSV template.
+- Unit tests and GitHub Actions for Python 3.10 and 3.12.
+
+### Changed
+
+- Reworked the README around the runnable application.
+- Added optional `brand` and `recommended` fields to the data schema.
+- Moved Streamlit from a future idea to the core public implementation.
+
 ## v1.0 - Initial Public Release
 
 Released: 2026-06-15
