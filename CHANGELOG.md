@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.2.2 - Stable Gemini generation and author credit
+
+Released: 2026-07-18
+
+### Fixed
+
+- Replace the experimental Gemini Interactions client with the stable Generate Content REST API.
+- Keep Gemini requests stateless with bounded prompt and output sizes.
+
+### Added
+
+- Display `By Mohammed Teto` in both the simple generator and GEO audit modes.
+
 ## v1.2.1 - Gemini provider support
 
 Released: 2026-07-18

@@ -32,22 +32,30 @@ class FakeClient:
         self.responses = FakeResponses()
 
 
-class FakeGeminiResponse:
-    output_text = "Une réponse Gemini utile."
+class FakeGeminiHTTPResponse:
+    status_code = 200
+
+    def json(self):
+        return {
+            "candidates": [
+                {
+                    "content": {
+                        "parts": [{"text": "Une réponse Gemini utile."}],
+                    }
+                }
+            ]
+        }
 
 
-class FakeInteractions:
+class FakeGeminiHTTPClient:
     def __init__(self):
+        self.url = None
         self.arguments = None
 
-    def create(self, **kwargs):
+    def post(self, url, **kwargs):
+        self.url = url
         self.arguments = kwargs
-        return FakeGeminiResponse()
-
-
-class FakeGeminiClient:
-    def __init__(self):
-        self.interactions = FakeInteractions()
+        return FakeGeminiHTTPResponse()
 
 
 class GeneratorTests(unittest.TestCase):
@@ -79,7 +87,7 @@ class GeneratorTests(unittest.TestCase):
             detect_provider("custom", "unknown")
 
     def test_gemini_call_is_bounded_and_uses_system_instructions(self):
-        client = FakeGeminiClient()
+        client = FakeGeminiHTTPClient()
         result = generate_response(
             " Aide-moi ",
             "test-key",
@@ -88,15 +96,25 @@ class GeneratorTests(unittest.TestCase):
         )
 
         self.assertEqual(result, "Une réponse Gemini utile.")
-        arguments = client.interactions.arguments
-        self.assertEqual(arguments["model"], "gemini-2.5-flash")
-        self.assertEqual(arguments["input"], "Aide-moi")
-        self.assertEqual(arguments["system_instruction"], SYSTEM_INSTRUCTIONS)
         self.assertEqual(
-            arguments["generation_config"]["max_output_tokens"],
+            client.url,
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            "gemini-2.5-flash:generateContent",
+        )
+        arguments = client.arguments
+        self.assertEqual(arguments["headers"]["x-goog-api-key"], "test-key")
+        self.assertEqual(
+            arguments["json"]["contents"][0]["parts"][0]["text"],
+            "Aide-moi",
+        )
+        self.assertEqual(
+            arguments["json"]["system_instruction"]["parts"][0]["text"],
+            SYSTEM_INSTRUCTIONS,
+        )
+        self.assertEqual(
+            arguments["json"]["generationConfig"]["maxOutputTokens"],
             MAX_OUTPUT_TOKENS,
         )
-        self.assertFalse(arguments["store"])
 
     def test_missing_key_and_empty_output_are_rejected(self):
         with self.assertRaises(ValueError):
