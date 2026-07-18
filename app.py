@@ -23,7 +23,6 @@ from src.generator import (
     MAX_PROMPT_CHARS,
     detect_provider,
     generate_response,
-    provider_error_diagnostic,
     public_error_message,
 )
 from src.report import build_html_report
@@ -75,6 +74,47 @@ def runtime_setting(name: str) -> str | None:
     except Exception:
         return None
     return str(secret_value) if secret_value else None
+
+
+def runtime_provider_diagnostic(error: Exception) -> str:
+    """Build safe diagnostic metadata without depending on a hot-reloaded import."""
+    status_code = getattr(error, "status_code", None) or getattr(error, "code", None)
+    body = getattr(error, "body", None)
+    payload = body.get("error", body) if isinstance(body, dict) else {}
+    remote_status = payload.get("status") if isinstance(payload, dict) else None
+    message = str(payload.get("message", "") if isinstance(payload, dict) else "").lower()
+
+    reason = None
+    details = payload.get("details", []) if isinstance(payload, dict) else []
+    if isinstance(details, list):
+        for detail in details:
+            if isinstance(detail, dict) and detail.get("reason"):
+                reason = str(detail["reason"])
+                break
+
+    if any(term in message for term in ("api key", "credential", "authorization key")):
+        category = "credentials"
+    elif "model" in message:
+        category = "model"
+    elif "store" in message:
+        category = "storage"
+    elif "generation_config" in message or "max_output" in message:
+        category = "generation-config"
+    elif "system_instruction" in message:
+        category = "system-instruction"
+    elif "input" in message:
+        category = "input"
+    else:
+        category = "request"
+
+    fields = {
+        "type": error.__class__.__name__,
+        "status": status_code,
+        "provider_status": remote_status,
+        "category": category,
+        "reason": reason,
+    }
+    return " ".join(f"{name}={value}" for name, value in fields.items() if value is not None)
 
 
 def render_simple_generator() -> None:
@@ -143,7 +183,7 @@ def render_simple_generator() -> None:
         except Exception as exc:
             LOGGER.warning(
                 "AI generation failed: %s",
-                provider_error_diagnostic(exc),
+                runtime_provider_diagnostic(exc),
             )
             st.error(public_error_message(exc))
         else:
