@@ -1,5 +1,18 @@
 # Metrics Dictionary
 
+## Interactive dashboard metrics
+
+| Metric | Definition |
+|---|---|
+| Visibility score | Average of the supplied or calculated 0-100 row scores. |
+| Mention rate | Percentage of rows where `brand_mentioned` is `yes` or `partial`. |
+| Strict mention rate | Percentage of rows where `brand_mentioned` is `yes`. |
+| Citation rate | Percentage of rows with at least one recorded cited source. |
+| Recommendation rate | Percentage of observed `recommended` values equal to `yes`; `N/A` when no observations exist. |
+| Average position | Mean numeric mention position among mentioned rows with a valid position. |
+| Accuracy rate | Directional average using accurate=100, mostly accurate=75, partially accurate=40 and inaccurate=0. |
+| Competitor mentions | Count of each comma- or semicolon-separated competitor occurrence. |
+
 This document explains the core metrics used in the GEO Prompt Audit Dashboard.
 
 ---

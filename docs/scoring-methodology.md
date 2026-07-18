@@ -108,3 +108,25 @@ Scores should be interpreted directionally.
 AI answers can vary over time and across systems.
 
 Use the scoring model to identify patterns, compare prompt categories and prioritize improvements.
+
+## Application behavior
+
+The interactive application preserves a valid score supplied in the CSV. When
+the `score` field is absent or empty, it calculates the score from the fields
+above.
+
+Source quality is estimated conservatively from the labels recorded in
+`cited_sources`:
+
+- Official plus third-party evidence: 15 points.
+- Official source only: 10 points.
+- Other recorded source: 5 points.
+- No source: 0 points.
+
+Competitive context uses the optional `recommended` field where available. A
+brand mentioned and explicitly recommended can receive 15 points; a brand
+mentioned alongside competitors receives 10; competitors present while the
+brand is missing receives 0; and no relevant competitive context receives 5.
+
+These heuristics are intentionally transparent. Teams should document and keep
+their own scoring policy stable across audit periods.
