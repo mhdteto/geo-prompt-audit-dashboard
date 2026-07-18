@@ -32,21 +32,21 @@ class FakeClient:
 
 
 class FakeGeminiResponse:
-    text = "Une réponse Gemini utile."
+    output_text = "Une réponse Gemini utile."
 
 
-class FakeModels:
+class FakeInteractions:
     def __init__(self):
         self.arguments = None
 
-    def generate_content(self, **kwargs):
+    def create(self, **kwargs):
         self.arguments = kwargs
         return FakeGeminiResponse()
 
 
 class FakeGeminiClient:
     def __init__(self):
-        self.models = FakeModels()
+        self.interactions = FakeInteractions()
 
 
 class GeneratorTests(unittest.TestCase):
@@ -87,11 +87,15 @@ class GeneratorTests(unittest.TestCase):
         )
 
         self.assertEqual(result, "Une réponse Gemini utile.")
-        self.assertEqual(client.models.arguments["model"], "gemini-2.5-flash")
-        self.assertEqual(client.models.arguments["contents"], "Aide-moi")
-        config = client.models.arguments["config"]
-        self.assertEqual(config.system_instruction, SYSTEM_INSTRUCTIONS)
-        self.assertEqual(config.max_output_tokens, MAX_OUTPUT_TOKENS)
+        arguments = client.interactions.arguments
+        self.assertEqual(arguments["model"], "gemini-2.5-flash")
+        self.assertEqual(arguments["input"], "Aide-moi")
+        self.assertEqual(arguments["system_instruction"], SYSTEM_INSTRUCTIONS)
+        self.assertEqual(
+            arguments["generation_config"]["max_output_tokens"],
+            MAX_OUTPUT_TOKENS,
+        )
+        self.assertFalse(arguments["store"])
 
     def test_missing_key_and_empty_output_are_rejected(self):
         with self.assertRaises(ValueError):

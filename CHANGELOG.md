@@ -7,6 +7,7 @@ Released: 2026-07-18
 ### Fixed
 
 - Route `gemini-*` models to the Google Gemini API instead of the OpenAI API.
+- Use Google’s current Interactions API for compatibility with Gemini authorization keys.
 - Support neutral provider settings while keeping the initial Streamlit configuration compatible.
 - Use provider-neutral public errors without exposing API details.
 
