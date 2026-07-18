@@ -104,3 +104,44 @@ def public_error_message(error: Exception) -> str:
     if "badrequest" in error_name:
         return "La demande n’a pas pu être traitée. Reformulez-la puis réessayez."
     return "La génération a échoué. Réessayez dans quelques instants."
+
+
+def provider_error_diagnostic(error: Exception) -> str:
+    """Return non-sensitive provider metadata suitable for private server logs."""
+    status_code = getattr(error, "status_code", None) or getattr(error, "code", None)
+    body = getattr(error, "body", None)
+    payload = body.get("error", body) if isinstance(body, dict) else {}
+    remote_status = payload.get("status") if isinstance(payload, dict) else None
+    message = str(payload.get("message", "") if isinstance(payload, dict) else "").lower()
+
+    reason = None
+    details = payload.get("details", []) if isinstance(payload, dict) else []
+    if isinstance(details, list):
+        for detail in details:
+            if isinstance(detail, dict) and detail.get("reason"):
+                reason = str(detail["reason"])
+                break
+
+    if any(term in message for term in ("api key", "credential", "authorization key")):
+        category = "credentials"
+    elif "model" in message:
+        category = "model"
+    elif "store" in message:
+        category = "storage"
+    elif "generation_config" in message or "max_output" in message:
+        category = "generation-config"
+    elif "system_instruction" in message:
+        category = "system-instruction"
+    elif "input" in message:
+        category = "input"
+    else:
+        category = "request"
+
+    fields = {
+        "type": error.__class__.__name__,
+        "status": status_code,
+        "provider_status": remote_status,
+        "category": category,
+        "reason": reason,
+    }
+    return " ".join(f"{name}={value}" for name, value in fields.items() if value is not None)

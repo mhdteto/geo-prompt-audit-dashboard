@@ -9,6 +9,7 @@ from src.generator import (
     detect_provider,
     generate_response,
     normalize_prompt,
+    provider_error_diagnostic,
     public_error_message,
 )
 
@@ -118,6 +119,29 @@ class GeneratorTests(unittest.TestCase):
             {"status_code": 403},
         )
         self.assertIn("administrateur", public_error_message(GooglePermissionError()))
+
+    def test_provider_diagnostics_include_codes_but_not_provider_message(self):
+        ProviderError = type(
+            "BadRequestError",
+            (Exception,),
+            {
+                "status_code": 400,
+                "body": {
+                    "error": {
+                        "status": "INVALID_ARGUMENT",
+                        "message": "API key not valid: secret-value",
+                        "details": [{"reason": "API_KEY_INVALID"}],
+                    }
+                },
+            },
+        )
+        diagnostic = provider_error_diagnostic(ProviderError())
+
+        self.assertIn("status=400", diagnostic)
+        self.assertIn("provider_status=INVALID_ARGUMENT", diagnostic)
+        self.assertIn("category=credentials", diagnostic)
+        self.assertIn("reason=API_KEY_INVALID", diagnostic)
+        self.assertNotIn("secret-value", diagnostic)
 
 
 if __name__ == "__main__":
