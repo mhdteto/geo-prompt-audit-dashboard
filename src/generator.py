@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any
+from urllib.parse import quote
 
 
 DEFAULT_MODEL = "gpt-5.6-luna"
@@ -15,6 +16,15 @@ SYSTEM_INSTRUCTIONS = (
     "Give a direct, well-structured answer. State uncertainty instead of inventing facts. "
     "Do not claim to have completed external actions that you did not actually perform."
 )
+
+
+class ProviderHTTPError(RuntimeError):
+    """Provider failure carrying only the status and response body for safe handling."""
+
+    def __init__(self, status_code: int, body: object | None = None) -> None:
+        super().__init__(f"The provider returned HTTP {status_code}.")
+        self.status_code = status_code
+        self.body = body
 
 
 def normalize_prompt(prompt: str) -> str:
@@ -54,19 +64,61 @@ def generate_response(
 
     resolved_provider = detect_provider(model, provider)
     if resolved_provider == GEMINI_PROVIDER:
+        owns_client = client is None
         if client is None:
-            from google import genai
+            import httpx
 
-            client = genai.Client(api_key=api_key)
+            client = httpx.Client(timeout=45.0)
 
-        response = client.interactions.create(
-            model=model,
-            input=normalized_prompt,
-            system_instruction=SYSTEM_INSTRUCTIONS,
-            generation_config={"max_output_tokens": MAX_OUTPUT_TOKENS},
-            store=False,
+        model_path = quote(model.strip(), safe="")
+        url = (
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{model_path}:generateContent"
         )
-        output_text = str(getattr(response, "output_text", "") or "").strip()
+        try:
+            response = client.post(
+                url,
+                headers={
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": api_key,
+                },
+                json={
+                    "system_instruction": {
+                        "parts": [{"text": SYSTEM_INSTRUCTIONS}],
+                    },
+                    "contents": [
+                        {
+                            "role": "user",
+                            "parts": [{"text": normalized_prompt}],
+                        }
+                    ],
+                    "generationConfig": {
+                        "maxOutputTokens": MAX_OUTPUT_TOKENS,
+                    },
+                },
+            )
+            try:
+                payload = response.json()
+            except Exception:
+                payload = {}
+
+            if response.status_code >= 400:
+                raise ProviderHTTPError(response.status_code, payload)
+
+            candidates = payload.get("candidates", []) if isinstance(payload, dict) else []
+            parts = (
+                candidates[0].get("content", {}).get("parts", [])
+                if candidates and isinstance(candidates[0], dict)
+                else []
+            )
+            output_text = "\n".join(
+                str(part.get("text", "")).strip()
+                for part in parts
+                if isinstance(part, dict) and part.get("text")
+            ).strip()
+        finally:
+            if owns_client:
+                client.close()
     else:
         if client is None:
             from openai import OpenAI

@@ -49,6 +49,7 @@ st.markdown(
     [data-testid="stMetric"] {background:#f7fafc;border:1px solid #dce7f0;padding:14px;border-radius:12px;}
     [data-testid="stMetricValue"] {color:#102a43;}
     .small-note {color:#627d98;font-size:.88rem;}
+    .app-credit {color:#627d98;font-size:.92rem;text-align:center;margin-top:1rem;}
 </style>
 """,
     unsafe_allow_html=True,
@@ -118,6 +119,11 @@ def runtime_provider_diagnostic(error: Exception) -> str:
         "reason": reason,
     }
     return " ".join(f"{name}={value}" for name, value in fields.items() if value is not None)
+
+
+def render_app_credit() -> None:
+    st.divider()
+    st.markdown('<p class="app-credit">By Mohammed Teto</p>', unsafe_allow_html=True)
 
 
 def render_simple_generator() -> None:
@@ -224,6 +230,7 @@ mode = st.radio(
 
 if mode == "Génération simple":
     render_simple_generator()
+    render_app_credit()
     st.stop()
 
 with st.sidebar:
@@ -399,3 +406,4 @@ st.markdown(
     '<p class="small-note">Directional measurement only. Results can vary by model, retrieval system, location, prompt wording and date.</p>',
     unsafe_allow_html=True,
 )
+render_app_credit()
