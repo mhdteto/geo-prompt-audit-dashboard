@@ -1,3 +1,9 @@
+<!-- teto-theme:banner:start -->
+<p align="center">
+  <img src=".github/readme-assets/banner.svg" width="100%" alt="GEO Prompt Audit · Dashboard — Explore audit data &amp; compare AI answer engines" />
+</p>
+<!-- teto-theme:banner:end -->
+
 # GEO Prompt Audit Dashboard
 
 An interactive, open-source dashboard for measuring how a brand appears across ChatGPT, Perplexity, Gemini, Claude and Google AI Overviews.
@@ -11,6 +17,23 @@ An interactive, open-source dashboard for measuring how a brand appears across C
 > Upload a prompt-audit CSV, compare AI engines, identify visibility gaps and export a client-ready HTML report.
 
 The application also includes a **Simple generation** mode: a visitor writes a request and receives a direct AI-generated answer in the same language.
+
+<!-- teto-theme:navigation:start -->
+<p>
+  <a href="#run-locally"><img src=".github/readme-assets/start.svg" width="148" height="36" alt="Get started" /></a>
+  <a href="#quick-access"><img src=".github/readme-assets/resources.svg" width="148" height="36" alt="Resources" /></a>
+  <a href="https://github.com/mhdteto"><img src=".github/readme-assets/profile.svg" width="148" height="36" alt="GitHub profile" /></a>
+</p>
+
+## Quick access
+
+| Resource | Open |
+| :--- | :--- |
+| Audit guide | [Open →](docs/how-to-run-a-geo-prompt-audit.md) |
+| Scoring methodology | [Open →](docs/scoring-methodology.md) |
+| CSV template | [Open →](data/data-template.csv) |
+
+<!-- teto-theme:navigation:end -->
 
 ## What the application measures
 
